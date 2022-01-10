@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
-public class NettyServerPartModel {
+public class NettyServerModel {
 
-    private final Logger myLogger = LoggerFactory.getLogger(NettyServerPartModel.class);
+    private final Logger myLogger = LoggerFactory.getLogger(NettyServerModel.class);
 
     private int bindPort;
-    public NettyServerPartModel(int port){
+    public NettyServerModel(int port){
         bindPort = port;
     }
-    public NettyServerPartModel(){
+    public NettyServerModel(){
         bindPort = 19191;
     }
 
@@ -35,7 +35,8 @@ public class NettyServerPartModel {
 
             serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
-                    socketChannel.pipeline().addLast();
+                    socketChannel.pipeline().addLast();//加载Inbound
+                    socketChannel.pipeline().addFirst();//加载outbound
                     //socketChannel.pipeline().addLast(serverHandler);
                 }
             });
