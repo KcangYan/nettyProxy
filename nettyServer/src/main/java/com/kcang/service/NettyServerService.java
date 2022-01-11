@@ -2,23 +2,28 @@ package com.kcang.service;
 
 import com.kcang.decode.ServerPartDecode;
 import com.kcang.model.NettyServerModel;
-import io.netty.channel.ChannelInboundHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Logger;
 
 public class NettyServerService {
 
-    private final Logger myLogger = LoggerFactory.getLogger(NettyServerService.class);
+    private final Logger myLogger = Logger.getLogger("NettyServerService");
 
     public void run(){
-        ServerPartDecode testDecode = new ServerPartDecode();
-        List<ChannelInboundHandler> channelInboundHandlers = new ArrayList<>();
-        channelInboundHandlers.add(testDecode);
 
-        NettyServerModel nettyServer = new NettyServerModel(channelInboundHandlers,null);
+        ChannelInitializer<SocketChannel> channelChannelInitializer = new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) throws Exception {
+                ch.pipeline().addFirst(new ServerPartDecode());
+                ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
+            }
+        };
+
+        NettyServerModel nettyServer = new NettyServerModel(channelChannelInitializer);
         try{
             nettyServer.run();
         }catch (Exception e){

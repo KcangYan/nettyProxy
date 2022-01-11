@@ -1,8 +1,6 @@
 package com.kcang.decode;
 
-import com.kcang.service.NettyServerService;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.util.CharsetUtil;
@@ -13,7 +11,7 @@ import java.util.List;
 
 public class ServerPartDecode extends ByteToMessageDecoder {
 
-    private final Logger myLogger = LoggerFactory.getLogger(ServerPartDecode.class);
+    private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
     private String message = "";
     @Override
