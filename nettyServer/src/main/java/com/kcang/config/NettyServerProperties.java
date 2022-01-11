@@ -7,8 +7,8 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public class NettyServerProperties {
-    private static int ExternalHttpPort;
-    private static int InsideTcpPort;
+    private static int PublicHttpPort;
+    private static int PrivateTcpPort;
     private static String AesKey;
     private static Logger myLogger = LoggerFactory.getLogger(NettyServerProperties.class);
     static {
@@ -18,13 +18,13 @@ public class NettyServerProperties {
             prop.load(new FileInputStream("nettyServer.properties"));
             AesKey = prop.getProperty("AesKey");//加载AES密钥
             AesKey = aesKeyCompletion(AesKey);//补全
-            ExternalHttpPort = Integer.parseInt(prop.getProperty("ExternalHttpPort"));//加载对外http服务端口
-            InsideTcpPort = Integer.parseInt(prop.getProperty("InsideTcpPort"));//加载服务端与客户端tcp通信端口
+            PublicHttpPort = Integer.parseInt(prop.getProperty("PublicHttpPort"));//加载对外http服务端口
+            PrivateTcpPort = Integer.parseInt(prop.getProperty("PrivateTcpPort"));//加载服务端与客户端tcp通信端口
             myLogger.info("nettyServer.properties配置文件加载成功");
         }catch (Exception e){
             AesKey = "kcang12346890123";
-            ExternalHttpPort = 19191;
-            InsideTcpPort = 9191;
+            PublicHttpPort = 19191;
+            PrivateTcpPort = 9191;
             //e.printStackTrace();
             myLogger.error("配置文件加载失败: "+e.toString()+ " 启用默认配置");
         }
@@ -40,20 +40,20 @@ public class NettyServerProperties {
         }
     }
 
-    public int getExternalHttpPort() {
-        return ExternalHttpPort;
+    public int getPublicHttpPort() {
+        return PublicHttpPort;
     }
 
-    public void setExternalHttpPort(int externalHttpPort) {
-        ExternalHttpPort = externalHttpPort;
+    public void setPublicHttpPort(int publicHttpPort) {
+        PublicHttpPort = publicHttpPort;
     }
 
-    public int getInsideTcpPort() {
-        return InsideTcpPort;
+    public int getPrivateTcpPort() {
+        return PrivateTcpPort;
     }
 
-    public void setInsideTcpPort(int insideTcpPort) {
-        InsideTcpPort = insideTcpPort;
+    public void setPrivateTcpPort(int privateTcpPort) {
+        PrivateTcpPort = privateTcpPort;
     }
 
     public String getAesKey() {

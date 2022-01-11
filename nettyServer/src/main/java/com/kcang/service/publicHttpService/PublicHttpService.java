@@ -1,4 +1,4 @@
-package com.kcang.service.insideTcpService;
+package com.kcang.service.publicHttpService;
 
 import com.kcang.config.NettyServerProperties;
 import com.kcang.decode.ServerPartDecode;
@@ -8,9 +8,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public class InsideTcpService implements Runnable {
+public class PublicHttpService implements Runnable {
     private NettyServerProperties nettyServerProperties;
-    public InsideTcpService(NettyServerProperties nettyServerProperties){
+    public PublicHttpService(NettyServerProperties nettyServerProperties){
         this.nettyServerProperties = nettyServerProperties;
     }
     @Override
@@ -22,9 +22,9 @@ public class InsideTcpService implements Runnable {
                 //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
             }
         };
-        NettyServerModel insideTcpService = new NettyServerModel(nettyServerProperties.getInsideTcpPort(),channelChannelInitializer);
+        NettyServerModel externalHttp = new NettyServerModel(nettyServerProperties.getPublicHttpPort(),channelChannelInitializer);
         try {
-            insideTcpService.run();
+            externalHttp.run();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,8 +1,8 @@
 package com.kcang.service;
 
 import com.kcang.config.NettyServerProperties;
-import com.kcang.service.externalHttpService.ExternalHttpService;
-import com.kcang.service.insideTcpService.InsideTcpService;
+import com.kcang.service.privateTcpService.PrivateTcpService;
+import com.kcang.service.publicHttpService.PublicHttpService;
 
 public class NettyServerService {
 
@@ -12,10 +12,10 @@ public class NettyServerService {
     }
 
     public void run(){
-        ExternalHttpService externalHttpService = new ExternalHttpService(nettyServerProperties);
-        InsideTcpService insideTcpService = new InsideTcpService(nettyServerProperties);
-        Thread externalHttp = new Thread(externalHttpService,"externalHttpServer");
-        Thread insideTcp = new Thread(insideTcpService,"insideTcpServer");
+        PublicHttpService publicHttpService = new PublicHttpService(nettyServerProperties);
+        PrivateTcpService privateTcpService = new PrivateTcpService(nettyServerProperties);
+        Thread externalHttp = new Thread(publicHttpService,"publicHttpService");
+        Thread insideTcp = new Thread(privateTcpService,"privateTcpService");
         externalHttp.start();
         insideTcp.start();
     }
