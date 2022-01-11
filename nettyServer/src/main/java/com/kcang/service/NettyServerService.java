@@ -6,12 +6,12 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NettyServerService {
 
-    private final Logger myLogger = Logger.getLogger("NettyServerService");
+    private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
     public void run(){
 

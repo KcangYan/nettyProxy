@@ -5,13 +5,14 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.util.logging.Logger;
 
 public class NettyServerModel {
 
-    private final Logger myLogger = Logger.getLogger("NettyServerModel");
+    private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
     private int port;
     private ChannelInitializer channelInitializer;
@@ -42,12 +43,12 @@ public class NettyServerModel {
             myLogger.info("NettyServer服务启动成功端口: " + port);
             channelFuture.channel().closeFuture().sync();
         }catch (Exception e){
-            myLogger.warning("NettyServer启动失败: "+e.getMessage());
+            myLogger.error("NettyServer启动失败: "+e.getMessage());
             e.printStackTrace();
         }finally {
             workGroup.shutdownGracefully().sync();
             bossGroup.shutdownGracefully().sync();
-            myLogger.warning("NettyServer服务终止！");
+            myLogger.error("NettyServer服务终止！");
             myLogger.info("正在重启NettyServer服务器");
             Thread.sleep(5000);
             this.run();
