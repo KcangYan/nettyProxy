@@ -18,8 +18,8 @@ public class ServerPartDecode extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         ByteBuf bufMsg = in.readBytes(in.readableBytes());
         String getMsg = bufMsg.toString(CharsetUtil.UTF_8);
-        myLogger.info("当前消息: "+getMsg);
+        myLogger.info("当前消息: \n"+getMsg);
         message = message + getMsg;
-        myLogger.info("全部消息: "+message);
+        myLogger.info("全部消息: \n"+message);
     }
 }
