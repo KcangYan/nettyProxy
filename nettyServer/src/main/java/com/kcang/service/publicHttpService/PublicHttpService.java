@@ -2,11 +2,8 @@ package com.kcang.service.publicHttpService;
 
 import com.kcang.config.NettyServerProperties;
 import com.kcang.decode.ServerPartDecode;
-import com.kcang.model.NettyServerModel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 
 public class PublicHttpService implements Runnable {
     private NettyServerProperties nettyServerProperties;
@@ -22,7 +19,7 @@ public class PublicHttpService implements Runnable {
                 //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
             }
         };
-        NettyServerModel externalHttp = new NettyServerModel(nettyServerProperties.getPublicHttpPort(),channelChannelInitializer);
+        com.kcang.model.NettyServerFactory externalHttp = new com.kcang.model.NettyServerFactory(nettyServerProperties.getPublicHttpPort(),channelChannelInitializer);
         try {
             externalHttp.run();
         } catch (InterruptedException e) {

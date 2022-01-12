@@ -10,19 +10,19 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
-public class NettyServerModel {
+public class NettyServerFactory {
 
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
     private int port;
     private ChannelInitializer channelInitializer;
 
-    public NettyServerModel(int port, ChannelInitializer<SocketChannel> channelInitializer){
+    public NettyServerFactory(int port, ChannelInitializer<SocketChannel> channelInitializer){
         this.port = port;
         this.channelInitializer = channelInitializer;
     }
 
-    public NettyServerModel(ChannelInitializer<SocketChannel> channelInitializer) {
+    public NettyServerFactory(ChannelInitializer<SocketChannel> channelInitializer) {
         this.channelInitializer = channelInitializer;
         this.port = 19191;
     }
