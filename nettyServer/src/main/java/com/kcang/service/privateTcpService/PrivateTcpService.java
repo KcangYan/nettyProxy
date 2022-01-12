@@ -2,6 +2,7 @@ package com.kcang.service.privateTcpService;
 
 import com.kcang.config.NettyServerProperties;
 import com.kcang.decode.ServerPartDecode;
+import com.kcang.model.NettyServerTemplate;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 
@@ -19,7 +20,7 @@ public class PrivateTcpService implements Runnable {
                 //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
             }
         };
-        com.kcang.model.NettyServerFactory insideTcpService = new com.kcang.model.NettyServerFactory(nettyServerProperties.getPrivateTcpPort(),channelChannelInitializer);
+        NettyServerTemplate insideTcpService = new NettyServerTemplate(nettyServerProperties.getPrivateTcpPort(),channelChannelInitializer);
         try {
             insideTcpService.run();
         } catch (InterruptedException e) {
