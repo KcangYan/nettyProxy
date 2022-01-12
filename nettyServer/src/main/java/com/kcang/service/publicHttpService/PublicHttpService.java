@@ -7,12 +7,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 
 public class PublicHttpService implements Runnable {
-    private NettyServerProperties nettyServerProperties;
+    private NettyServerTemplate nettyServerTemplate;
     public PublicHttpService(NettyServerProperties nettyServerProperties){
-        this.nettyServerProperties = nettyServerProperties;
-    }
-    @Override
-    public void run() {
         ChannelInitializer<SocketChannel> channelChannelInitializer = new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
@@ -20,9 +16,12 @@ public class PublicHttpService implements Runnable {
                 //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
             }
         };
-        NettyServerTemplate externalHttp = new NettyServerTemplate(nettyServerProperties.getPublicHttpPort(),channelChannelInitializer);
+        this.nettyServerTemplate = new NettyServerTemplate(nettyServerProperties.getPublicHttpPort(),channelChannelInitializer);
+    }
+    @Override
+    public void run() {
         try {
-            externalHttp.run();
+            nettyServerTemplate.run();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
