@@ -7,10 +7,10 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public class NettyClientProperties {
-    private static String PublicTcpAddress;
-    private static int PublicTcpPort;
-    private static String PrivateHttpAddress;
-    private static int PrivateHttpPort;
+    private static String PublicAddress;
+    private static int PublicPort;
+    private static String PrivateAddress;
+    private static int PrivatePort;
     private static String ClientName;
     private static String AesKey;
     private static Logger myLogger = LoggerFactory.getLogger(NettyClientProperties.class);
@@ -21,18 +21,18 @@ public class NettyClientProperties {
             prop.load(new FileInputStream("nettyClient.properties"));
             AesKey = prop.getProperty("AesKey");//加载AES密钥
             AesKey = aesKeyCompletion(AesKey);//补全
-            PublicTcpAddress = prop.getProperty("PublicTcpAddress");
-            PublicTcpPort = Integer.parseInt(prop.getProperty("PublicTcpPort"));//加载公网tcp服务端口
-            PrivateHttpAddress = prop.getProperty("PrivateHttpAddress");
-            PrivateHttpPort = Integer.parseInt(prop.getProperty("PrivateHttpPort"));//加载要转发的本地http服务端口
+            PublicAddress = prop.getProperty("PublicAddress");
+            PublicPort = Integer.parseInt(prop.getProperty("PublicPort"));//加载公网tcp服务端口
+            PrivateAddress = prop.getProperty("PrivateAddress");
+            PrivatePort = Integer.parseInt(prop.getProperty("PrivatePort"));//加载要转发的本地http服务端口
             ClientName = prop.getProperty("ClientName");
             myLogger.info("nettyClient.properties配置文件加载成功");
         }catch (Exception e){
             AesKey = "kcang12346890123";
-            PublicTcpAddress = "127.0.0.1";
-            PublicTcpPort = 19191;
-            PrivateHttpAddress = "127.0.0.1";
-            PrivateHttpPort = 9191;
+            PublicAddress = "127.0.0.1";
+            PublicPort = 19191;
+            PrivateAddress = "127.0.0.1";
+            PrivatePort = 9191;
             ClientName="ClientName";
             //e.printStackTrace();
             myLogger.error("配置文件加载失败: "+e.toString()+ " 启用默认配置");
@@ -58,36 +58,36 @@ public class NettyClientProperties {
         }
     }
 
-    public String getPublicTcpAddress() {
-        return PublicTcpAddress;
+    public String getPublicAddress() {
+        return PublicAddress;
     }
 
-    public void setPublicTcpAddress(String publicTcpAddress) {
-        PublicTcpAddress = publicTcpAddress;
+    public void setPublicAddress(String publicAddress) {
+        PublicAddress = publicAddress;
     }
 
-    public int getPublicTcpPort() {
-        return PublicTcpPort;
+    public int getPublicPort() {
+        return PublicPort;
     }
 
-    public void setPublicTcpPort(int publicTcpPort) {
-        PublicTcpPort = publicTcpPort;
+    public void setPublicPort(int publicPort) {
+        PublicPort = publicPort;
     }
 
-    public String getPrivateHttpAddress() {
-        return PrivateHttpAddress;
+    public String getPrivateAddress() {
+        return PrivateAddress;
     }
 
-    public void setPrivateHttpAddress(String privateHttpAddress) {
-        PrivateHttpAddress = privateHttpAddress;
+    public void setPrivateAddress(String privateAddress) {
+        PrivateAddress = privateAddress;
     }
 
-    public int getPrivateHttpPort() {
-        return PrivateHttpPort;
+    public int getPrivatePort() {
+        return PrivatePort;
     }
 
-    public void setLocalHttpPort(int privateHttpPort) {
-        PrivateHttpPort = privateHttpPort;
+    public void setLocalPort(int privatePort) {
+        PrivatePort = privatePort;
     }
 
     public String getAesKey() {

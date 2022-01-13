@@ -23,7 +23,7 @@ public class PublicTcpService implements Runnable {
                 ch.pipeline().addLast(new PublicTcpOutboundHandler());
             }
         };
-        this.nettyClientTemplate = new NettyClientTemplate(nettyClientProperties.getPublicTcpAddress(),nettyClientProperties.getPublicTcpPort(),
+        this.nettyClientTemplate = new NettyClientTemplate(nettyClientProperties.getPublicAddress(),nettyClientProperties.getPublicPort(),
                 channelChannelInitializer);
     }
 

@@ -17,7 +17,7 @@ public class PrivateHttpService implements Runnable{
                 ch.pipeline().addLast(new PrivateHttpOutboundHandler());
             }
         };
-        this.nettyClientTemplate = new NettyClientTemplate(nettyClientProperties.getPrivateHttpAddress(),nettyClientProperties.getPrivateHttpPort(),
+        this.nettyClientTemplate = new NettyClientTemplate(nettyClientProperties.getPrivateAddress(),nettyClientProperties.getPrivatePort(),
                 channelChannelInitializer);
     }
 
