@@ -5,9 +5,11 @@ import com.kcang.decode.ServerPartDecode;
 import com.kcang.model.NettyServerTemplate;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PrivateTcpService implements Runnable {
-
+    private Logger myLogger = LoggerFactory.getLogger(this.getClass());
     private NettyServerTemplate nettyServerTemplate;
 
     public PrivateTcpService(NettyServerProperties nettyServerProperties){
@@ -25,7 +27,7 @@ public class PrivateTcpService implements Runnable {
         try {
             nettyServerTemplate.run();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            myLogger.error(e.toString());
         }
     }
 }

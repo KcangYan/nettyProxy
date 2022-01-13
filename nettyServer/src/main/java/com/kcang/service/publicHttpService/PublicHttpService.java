@@ -5,8 +5,11 @@ import com.kcang.decode.ServerPartDecode;
 import com.kcang.model.NettyServerTemplate;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PublicHttpService implements Runnable {
+    private Logger myLogger = LoggerFactory.getLogger(this.getClass());
     private NettyServerTemplate nettyServerTemplate;
     public PublicHttpService(NettyServerProperties nettyServerProperties){
         ChannelInitializer<SocketChannel> channelChannelInitializer = new ChannelInitializer<SocketChannel>() {
@@ -22,8 +25,8 @@ public class PublicHttpService implements Runnable {
     public void run() {
         try {
             nettyServerTemplate.run();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            myLogger.error(e.toString());
         }
     }
 }
