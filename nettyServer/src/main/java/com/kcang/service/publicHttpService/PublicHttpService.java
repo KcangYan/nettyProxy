@@ -19,7 +19,7 @@ public class PublicHttpService implements Runnable {
                 //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
             }
         };
-        this.nettyServerTemplate = new NettyServerTemplate(nettyServerProperties.getPublicHttpPort(),channelChannelInitializer);
+        this.nettyServerTemplate = new NettyServerTemplate(nettyServerProperties.getPublicPort(),channelChannelInitializer);
     }
     @Override
     public void run() {

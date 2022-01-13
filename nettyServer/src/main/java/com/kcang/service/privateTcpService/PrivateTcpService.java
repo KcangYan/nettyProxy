@@ -20,7 +20,7 @@ public class PrivateTcpService implements Runnable {
                 //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
             }
         };
-        this.nettyServerTemplate = new NettyServerTemplate(nettyServerProperties.getPrivateTcpPort(),channelChannelInitializer);
+        this.nettyServerTemplate = new NettyServerTemplate(nettyServerProperties.getPrivatePort(),channelChannelInitializer);
     }
     @Override
     public void run() {

@@ -7,8 +7,9 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public class NettyServerProperties {
-    private static int PublicHttpPort;
-    private static int PrivateTcpPort;
+    private static int PublicPort;
+    private static int PrivatePort;
+    private static boolean HttpProxy;
     private static String AesKey;
     private static Logger myLogger = LoggerFactory.getLogger(NettyServerProperties.class);
     static {
@@ -16,15 +17,16 @@ public class NettyServerProperties {
             myLogger.info("正在加载nettyServer.properties配置文件");
             Properties prop = new Properties();
             prop.load(new FileInputStream("nettyServer.properties"));
+            HttpProxy = Boolean.parseBoolean(prop.getProperty("HttpProxy"));
             AesKey = prop.getProperty("AesKey");//加载AES密钥
             AesKey = aesKeyCompletion(AesKey);//补全
-            PublicHttpPort = Integer.parseInt(prop.getProperty("PublicHttpPort"));//加载对外http服务端口
-            PrivateTcpPort = Integer.parseInt(prop.getProperty("PrivateTcpPort"));//加载服务端与客户端tcp通信端口
+            PublicPort = Integer.parseInt(prop.getProperty("PublicPort"));//加载对外http服务端口
+            PrivatePort = Integer.parseInt(prop.getProperty("PrivatePort"));//加载服务端与客户端tcp通信端口
             myLogger.info("nettyServer.properties配置文件加载成功");
         }catch (Exception e){
             AesKey = "kcang12346890123";
-            PublicHttpPort = 19191;
-            PrivateTcpPort = 9191;
+            PublicPort = 19191;
+            PrivatePort = 9191;
             //e.printStackTrace();
             myLogger.error("配置文件加载失败: "+e.toString()+ " 启用默认配置");
         }
@@ -40,20 +42,20 @@ public class NettyServerProperties {
         }
     }
 
-    public int getPublicHttpPort() {
-        return PublicHttpPort;
+    public int getPublicPort() {
+        return PublicPort;
     }
 
-    public void setPublicHttpPort(int publicHttpPort) {
-        PublicHttpPort = publicHttpPort;
+    public void setPublicPort(int publicPort) {
+        PublicPort = publicPort;
     }
 
-    public int getPrivateTcpPort() {
-        return PrivateTcpPort;
+    public int getPrivatePort() {
+        return PrivatePort;
     }
 
-    public void setPrivateTcpPort(int privateTcpPort) {
-        PrivateTcpPort = privateTcpPort;
+    public void setPrivatePort(int privatePort) {
+        PrivatePort = privatePort;
     }
 
     public String getAesKey() {
