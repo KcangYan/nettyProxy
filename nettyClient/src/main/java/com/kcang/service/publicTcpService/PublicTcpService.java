@@ -19,7 +19,7 @@ public class PublicTcpService implements Runnable {
                 //ch.pipeline().addLast(new IdleStateHandler(30,0,0, TimeUnit.SECONDS));
                 ch.pipeline().addFirst(new PublicTcpInboundHandler());
 
-                //ch.pipeline().addLast(new Test());
+                ch.pipeline().addLast(new Test());
                 ch.pipeline().addLast(new PublicTcpOutboundHandler());
             }
         };
