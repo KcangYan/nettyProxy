@@ -1,4 +1,4 @@
-package com.kcang.handler;
+package com.kcang.handler.privateHttp;
 
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 

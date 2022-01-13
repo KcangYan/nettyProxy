@@ -1,7 +1,7 @@
 package com.kcang.service.privateHttpService;
 
 import com.kcang.config.NettyClientProperties;
-import com.kcang.handler.PrivateHttpOutboundHandler;
+import com.kcang.handler.privateHttp.PrivateHttpOutboundHandler;
 import com.kcang.model.NettyClientTemplate;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
