@@ -1,4 +1,4 @@
-package com.kcang.service.publicHttpService;
+package com.kcang.service.publicTcpService;
 
 import com.kcang.config.NettyServerProperties;
 import com.kcang.decode.ServerPartDecode;
@@ -8,10 +8,10 @@ import io.netty.channel.socket.SocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PublicHttpService implements Runnable {
+public class PublicTcpService implements Runnable {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
     private NettyServerTemplate nettyServerTemplate;
-    public PublicHttpService(NettyServerProperties nettyServerProperties){
+    public PublicTcpService(NettyServerProperties nettyServerProperties){
         ChannelInitializer<SocketChannel> channelChannelInitializer = new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
