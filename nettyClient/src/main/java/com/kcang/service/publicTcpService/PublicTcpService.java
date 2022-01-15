@@ -4,30 +4,38 @@ import com.kcang.config.NettyClientProperties;
 import com.kcang.handler.publicTcp.PublicTcpInboundHandler;
 import com.kcang.handler.publicTcp.PublicTcpOutboundHandler;
 import com.kcang.handler.publicTcp.Test;
-import com.kcang.model.NettyClientTemplate;
-import io.netty.channel.ChannelInitializer;
+import com.kcang.template.NettyClientTemplate;
 import io.netty.channel.socket.SocketChannel;
+import org.slf4j.LoggerFactory;
 
-public class PublicTcpService implements Runnable {
-
-    private NettyClientTemplate nettyClientTemplate;
+/**
+ * 连接公网转发服务器的客户端类
+ */
+public class PublicTcpService extends NettyClientTemplate implements Runnable {
 
     public PublicTcpService(NettyClientProperties nettyClientProperties){
-        ChannelInitializer<SocketChannel> channelChannelInitializer = new ChannelInitializer<SocketChannel>() {
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                //ch.pipeline().addLast(new IdleStateHandler(30,0,0, TimeUnit.SECONDS));
-                ch.pipeline().addFirst(new PublicTcpInboundHandler());
-
-                ch.pipeline().addLast(new Test());
-                ch.pipeline().addLast(new PublicTcpOutboundHandler());
-            }
-        };
-        this.nettyClientTemplate = new NettyClientTemplate(nettyClientProperties.getPublicAddress(),nettyClientProperties.getPublicPort(),
-                channelChannelInitializer);
+        super.myLogger = LoggerFactory.getLogger(this.getClass());
+        super.serverAddress = nettyClientProperties.getPublicAddress();
+        super.port = nettyClientProperties.getPublicPort();
     }
 
+    /**
+     * 配置pipeline责任链
+     * @param ch socketChannel
+     * @throws Exception 异常
+     */
+    @Override
+    protected void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addFirst(new PublicTcpInboundHandler());
+        ch.pipeline().addFirst(new PublicTcpInboundHandler());
+
+        ch.pipeline().addLast(new Test());
+        ch.pipeline().addLast(new PublicTcpOutboundHandler());
+    }
+
+    @Override
     public void run() {
-        nettyClientTemplate.run();
+        super.run(this);
     }
+
 }

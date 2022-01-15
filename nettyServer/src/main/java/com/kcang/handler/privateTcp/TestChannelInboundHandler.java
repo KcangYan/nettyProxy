@@ -1,11 +1,11 @@
-package com.kcang.handler.publicTcp;
+package com.kcang.handler.privateTcp;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PublicTcpInboundHandler extends ChannelInboundHandlerAdapter {
+public class TestChannelInboundHandler extends ChannelInboundHandlerAdapter {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
     @Override

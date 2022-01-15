@@ -1,4 +1,4 @@
-package com.kcang.model;
+package com.kcang.template;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -10,19 +10,15 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
-public class NettyClientTemplate {
-    private String serverAddress;
-    private int port;
-    private ChannelInitializer<SocketChannel> channelChannelInitializer;
-    private Logger myLogger = LoggerFactory.getLogger(NettyClientTemplate.class);
+/**
+ * netty客户端连接模板类
+ */
+public abstract class NettyClientTemplate extends ChannelInitializer<SocketChannel>{
+    protected String serverAddress;
+    protected int port;
+    protected Logger myLogger = LoggerFactory.getLogger(NettyClientTemplate.class);
 
-    public NettyClientTemplate(String serverAddress, int port, ChannelInitializer<SocketChannel> channelChannelInitializer){
-        this.serverAddress = serverAddress;
-        this.port = port;
-        this.channelChannelInitializer = channelChannelInitializer;
-    }
-
-    public void run(){
+    protected void run(ChannelInitializer<SocketChannel> channelChannelInitializer){
         myLogger.info("正在连接主机 "+serverAddress+":"+port);
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -42,4 +38,5 @@ public class NettyClientTemplate {
             myLogger.info("连接结束: "+serverAddress+":"+port);
         }
     }
+
 }

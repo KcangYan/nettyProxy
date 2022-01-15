@@ -1,4 +1,4 @@
-package com.kcang.model;
+package com.kcang.template;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -10,24 +10,15 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
-public class NettyServerTemplate {
+/**
+ * 用于建立Netty服务的统一模板
+ */
+public abstract class NettyServerTemplate extends ChannelInitializer<SocketChannel> {
 
-    private Logger myLogger = LoggerFactory.getLogger(this.getClass());
+    protected Logger myLogger = LoggerFactory.getLogger(this.getClass());
+    protected int port;
 
-    private int port;
-    private ChannelInitializer channelInitializer;
-
-    public NettyServerTemplate(int port, ChannelInitializer<SocketChannel> channelInitializer){
-        this.port = port;
-        this.channelInitializer = channelInitializer;
-    }
-
-    public NettyServerTemplate(ChannelInitializer<SocketChannel> channelInitializer) {
-        this.channelInitializer = channelInitializer;
-        this.port = 19191;
-    }
-
-    public void run() throws InterruptedException {
+    protected void run(ChannelInitializer channelInitializer) throws InterruptedException {
         myLogger.info("正在启动NettyServer: "+port);
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
@@ -51,7 +42,7 @@ public class NettyServerTemplate {
             myLogger.error("NettyServer服务终止！");
             myLogger.info("正在重启NettyServer服务器");
             Thread.sleep(5000);
-            this.run();
+            this.run(channelInitializer);
         }
     }
 }
