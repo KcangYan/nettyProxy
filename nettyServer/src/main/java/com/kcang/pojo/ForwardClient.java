@@ -1,5 +1,8 @@
 package com.kcang.pojo;
 
+import com.kcang.template.Observer;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -13,9 +16,42 @@ public class ForwardClient {
     private Integer healthyTimes;
     //客户端是否在线
     private Boolean clientStatus;
+    //注册回调者列表
+    private List<Observer> observers;
+
+    @Override
+    public String toString() {
+        return "ForwardClient{" +
+                "address='" + address + '\'' +
+                ", clientName='" + clientName + '\'' +
+                ", port=" + port +
+                ", message=" + message +
+                ", healthyTimes=" + healthyTimes +
+                ", clientStatus=" + clientStatus +
+                '}';
+    }
 
     public ForwardClient(){
         this.message = new Vector<>();
+        this.observers = new ArrayList<>();
+    }
+
+    /**
+     * 添加该对象的观察者
+     * @param observer 观察者对象
+     * @return this
+     */
+    public ForwardClient addObservers(Observer observer){
+        this.observers.add(observer);
+        return this;
+    }
+    /**
+     * 通知所有的观察者，本对象有变化
+     */
+    private void notifyObservers(){
+        for(Observer observer : this.observers){
+            observer.collBack(this);
+        }
     }
 
     public Boolean getClientStatus() {
@@ -24,14 +60,6 @@ public class ForwardClient {
 
     public void setClientStatus(Boolean clientStatus) {
         this.clientStatus = clientStatus;
-    }
-
-    public List<String> getMessage() {
-        return message;
-    }
-
-    public void setMessage(List<String> message) {
-        this.message = message;
     }
 
     public Integer getHealthyTimes() {
