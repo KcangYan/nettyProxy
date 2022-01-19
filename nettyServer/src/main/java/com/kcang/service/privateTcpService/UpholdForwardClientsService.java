@@ -47,7 +47,7 @@ public class UpholdForwardClientsService {
             }
         }
     }
-    public void downForwardClient(String clientName,String address, int port){
+    public void shutdownForwardClient(String clientName,String address, int port){
         List<ForwardClient> pass = this.forwardClients.get(clientName);
         for (ForwardClient forwardClient : pass) {
             if (forwardClient.getPort().equals(port) && forwardClient.getAddress().equals(address)) {

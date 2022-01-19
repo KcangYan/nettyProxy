@@ -10,14 +10,17 @@ public class NettyServerProperties {
     private static int PublicPort;
     private static int PrivatePort;
     private static boolean HttpProxy;
+    private static boolean AesOpen;
     private static String AesKey;
     private static Logger myLogger = LoggerFactory.getLogger(NettyServerProperties.class);
+
     static {
         try{
             myLogger.info("正在加载nettyServer.properties配置文件");
             Properties prop = new Properties();
             prop.load(new FileInputStream("nettyServer.properties"));
             HttpProxy = Boolean.parseBoolean(prop.getProperty("HttpProxy"));
+            AesOpen = Boolean.parseBoolean(prop.getProperty("AesOpen"));
             AesKey = prop.getProperty("AesKey");//加载AES密钥
             AesKey = aesKeyCompletion(AesKey);//补全
             PublicPort = Integer.parseInt(prop.getProperty("PublicPort"));//加载对外http服务端口
@@ -64,5 +67,21 @@ public class NettyServerProperties {
 
     public void setAesKey(String aesKey) {
         AesKey = aesKey;
+    }
+
+    public boolean isHttpProxy() {
+        return HttpProxy;
+    }
+
+    public void setHttpProxy(boolean httpProxy) {
+        HttpProxy = httpProxy;
+    }
+
+    public boolean isAesOpen() {
+        return AesOpen;
+    }
+
+    public void setAesOpen(boolean aesOpen) {
+        AesOpen = aesOpen;
     }
 }

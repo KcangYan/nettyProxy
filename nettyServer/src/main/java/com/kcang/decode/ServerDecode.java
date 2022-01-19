@@ -17,9 +17,11 @@ public class ServerDecode extends ByteToMessageDecoder{
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         while (in.isReadable()){
+            in.discardReadBytes();
 
         }
         ByteBuf bufMsg = in.readBytes(in.readableBytes());
+
         String getMsg = bufMsg.toString(CharsetUtil.UTF_8);
         myLogger.info("入口解码器收到消息: \n"+getMsg);
         message = message + getMsg;

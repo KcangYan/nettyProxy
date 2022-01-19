@@ -56,7 +56,7 @@ public class PublicTcpOutboundHandler extends ChannelOutboundHandlerAdapter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                ctx.writeAndFlush(Unpooled.copiedBuffer("hello server", CharsetUtil.UTF_8));
+                ctx.writeAndFlush(Unpooled.copiedBuffer("\001hello server\002", CharsetUtil.UTF_8));
                 //ctx.write(Unpooled.copiedBuffer("hello server", CharsetUtil.UTF_8));
                 myLogger.info("发送成功");
             }

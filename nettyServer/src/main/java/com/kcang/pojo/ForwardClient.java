@@ -1,6 +1,7 @@
 package com.kcang.pojo;
 
 import com.kcang.template.Observer;
+import io.netty.channel.ChannelHandlerContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class ForwardClient {
     private Boolean clientStatus;
     //注册回调者列表
     private List<Observer> observers;
+    //连接通道
+    private ChannelHandlerContext ctx;
 
     @Override
     public String toString() {
@@ -36,6 +39,20 @@ public class ForwardClient {
         this.observers = new ArrayList<>();
     }
 
+    /**
+     * 关闭连接
+     */
+    public void shutdownClient(){
+        this.ctx.disconnect();
+    }
+
+    /**
+     * 添加客户端
+     * @param ctx 客户端连接对象
+     */
+    public void setChannelHandlerContext(ChannelHandlerContext ctx){
+        this.ctx = ctx;
+    }
     /**
      * 添加该对象的观察者
      * @param observer 观察者对象

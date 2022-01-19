@@ -1,8 +1,10 @@
 package com.kcang.service.privateTcpService;
 
 import com.kcang.config.NettyServerProperties;
+import com.kcang.decode.PrivateTcpDecode;
 import com.kcang.decode.ServerDecode;
 import com.kcang.encode.ServerEncode;
+import com.kcang.handler.privateTcp.PrivateTcpInboundHandler;
 import com.kcang.handler.privateTcp.TestChannelInboundHandler;
 import com.kcang.handler.privateTcp.TestChannelOutboundHandler;
 import com.kcang.template.NettyServerTemplate;
@@ -16,9 +18,15 @@ import org.slf4j.LoggerFactory;
 public class PrivateTcpService extends NettyServerTemplate implements Runnable {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
-    public PrivateTcpService(NettyServerProperties nettyServerProperties){
+    //配置对象
+    private NettyServerProperties nettyServerProperties;
+    //客户端队列维护服务
+    private UpholdForwardClientsService upholdForwardClientsService;
+    public PrivateTcpService(NettyServerProperties nettyServerProperties,UpholdForwardClientsService upholdForwardClientsService){
         super.myLogger = this.myLogger;
         super.port = nettyServerProperties.getPrivatePort();
+        this.nettyServerProperties = nettyServerProperties;
+        this.upholdForwardClientsService = upholdForwardClientsService;
     }
 
     /**
@@ -28,13 +36,13 @@ public class PrivateTcpService extends NettyServerTemplate implements Runnable {
      */
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addFirst(new ServerDecode());
-        ch.pipeline().addFirst(new TestChannelInboundHandler());
+        ch.pipeline().addFirst(new PrivateTcpInboundHandler(upholdForwardClientsService));
+        ch.pipeline().addFirst(new PrivateTcpDecode(nettyServerProperties));
         //ch.pipeline().addFirst(new HeartBeatHandler());
         //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
 
-        ch.pipeline().addLast(new ServerEncode());
-        ch.pipeline().addLast(new TestChannelOutboundHandler());
+        //ch.pipeline().addLast(new ServerEncode());
+        //ch.pipeline().addLast(new TestChannelOutboundHandler());
     }
 
     /**
