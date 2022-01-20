@@ -4,9 +4,7 @@ import com.kcang.pojo.ForwardClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UpholdForwardClientsService {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
     //维护的map，根据客户端的名字标识
-    private Map<String,List<ForwardClient>> forwardClients;
+    private Map<String,ForwardClient> forwardClients;
     public UpholdForwardClientsService(){
         this.forwardClients = new ConcurrentHashMap<>();
     }
@@ -24,52 +22,75 @@ public class UpholdForwardClientsService {
      * 加入新客户端
      * @param forwardClient 客户端实例
      */
-    public void setForwardClient(ForwardClient forwardClient){
-        if(this.forwardClients.containsKey(forwardClient.getClientName())){
-            List<ForwardClient> pass = this.forwardClients.get(forwardClient.getClientName());
-            pass.add(forwardClient);
-            this.forwardClients.put(forwardClient.getClientName(),pass);
-        }else {
-            List<ForwardClient> pass = new Vector<>();
-            pass.add(forwardClient);
-            this.forwardClients.put(forwardClient.getClientName(),pass);
-        }
-        myLogger.info("新客户端注册成功: "+forwardClient.toString());
+    public void addForwardClient(ForwardClient forwardClient){
+        updateHealthy(forwardClient);
+        myLogger.info("新客户端加入 "+forwardClient.toString());
     }
 
-    public void updateHealthy(String clientName,String address, int port, Integer healthyTime){
-        List<ForwardClient> pass = this.forwardClients.get(clientName);
-        for (ForwardClient forwardClient : pass) {
-            if (forwardClient.getPort().equals(port) && forwardClient.getAddress().equals(address)) {
-                forwardClient.setHealthyTimes(healthyTime);
-                forwardClient.setClientStatus(true);
-                myLogger.debug("客户端心跳更新: "+forwardClient.toString());
+    /**
+     * 更新客户端
+     * @param forwardClient 客户端实例
+     */
+    public void updateHealthy(ForwardClient forwardClient){
+        forwardClient.setHealthyTimes(System.currentTimeMillis());
+        forwardClient.setClientStatus(true);
+        this.forwardClients.put(forwardClient.getClientName(),forwardClient);
+        myLogger.debug("心跳维护成功 "+forwardClient.toString());
+    }
+    public void updateHealthy(String address, int port){
+        ForwardClient forwardClient = null;
+        for(String key:this.forwardClients.keySet()){
+            forwardClient = this.forwardClients.get(key);
+            if(forwardClient.forwardClientEquals(address,port)){
+                break;
             }
         }
+        if(forwardClient != null){
+            updateHealthy(forwardClient);
+        }
     }
-    public void shutdownForwardClient(String clientName,String address, int port){
-        List<ForwardClient> pass = this.forwardClients.get(clientName);
-        for (ForwardClient forwardClient : pass) {
-            if (forwardClient.getPort().equals(port) && forwardClient.getAddress().equals(address)) {
-                forwardClient.setClientStatus(true);
-                myLogger.info("关闭客户端: "+forwardClient.toString());
+
+    /**
+     * 关闭客户端
+     * @param forwardClient 客户端实例
+     */
+    public void shutdownForwardClient(ForwardClient forwardClient){
+        ForwardClient client = this.forwardClients.get(forwardClient.getClientName());
+        client.setClientStatus(false);
+        client.getChannelHandlerContext().disconnect();
+        this.forwardClients.put(forwardClient.getClientName(),forwardClient);
+    }
+    public void shutdownForwardClient(String address, int port){
+        ForwardClient forwardClient = null;
+        for(String key:this.forwardClients.keySet()){
+            forwardClient = this.forwardClients.get(key);
+            if(forwardClient.forwardClientEquals(address,port)){
+                break;
             }
+        }
+        if(forwardClient != null){
+            shutdownForwardClient(forwardClient);
         }
     }
 
     /**
      * 移除客户端
-     * @param forwardClient 客户端对象
+     * @param forwardClient 客户端实例
      */
-    public void delForwardClient(String clientName, String address, int port){
-        List<ForwardClient> pass = this.forwardClients.get(clientName);
-        int i;
-        for(i=0;i<pass.size();i++){
-            if (pass.get(i).getPort().equals(port) && address.equals(pass.get(i).getAddress())) {
+    public void delForwardClient(ForwardClient forwardClient){
+        this.forwardClients.remove(forwardClient.getClientName());
+        myLogger.info("客户端移除 "+forwardClient.toString());
+    }
+    public void delForwardClient(String address, int port){
+        ForwardClient forwardClient = null;
+        for(String key:this.forwardClients.keySet()){
+            forwardClient = this.forwardClients.get(key);
+            if(forwardClient.forwardClientEquals(address,port)){
                 break;
             }
         }
-        this.forwardClients.get(clientName).remove(i);
-        myLogger.info("移除客户端: "+clientName+" "+address+":"+port);
+        if(forwardClient != null){
+            delForwardClient(forwardClient);
+        }
     }
 }

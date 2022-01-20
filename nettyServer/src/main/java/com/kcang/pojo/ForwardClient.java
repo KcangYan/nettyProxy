@@ -14,13 +14,37 @@ public class ForwardClient {
     //待转发的消息
     private List<String> message;
     //客户端上次心跳时间戳
-    private Integer healthyTimes;
+    private Long healthyTimes = null;
     //客户端是否在线
-    private Boolean clientStatus;
+    private Boolean clientStatus = null;
     //注册回调者列表
     private List<Observer> observers;
     //连接通道
     private ChannelHandlerContext ctx;
+
+    public ForwardClient(String clientName,String address, int port, ChannelHandlerContext ctx){
+        this.clientName = clientName;
+        this.address = address;
+        this.port = port;
+        this.ctx = ctx;
+        this.message = new Vector<>();
+        this.observers = new ArrayList<>();
+    }
+
+    /**
+     * 客户端比较方法
+     * @param obj 客户端
+     * @return
+     */
+    public boolean forwardClientEquals(ForwardClient obj) {
+        return this.getClientName().equals(obj.getClientName()) &&
+                this.getAddress().equals(obj.getAddress()) &&
+                this.getPort().equals(obj.getPort());
+    }
+    public boolean forwardClientEquals(String address, int port){
+        return this.getAddress().equals(address) &&
+                this.getPort().equals(port);
+    }
 
     @Override
     public String toString() {
@@ -28,15 +52,9 @@ public class ForwardClient {
                 "address='" + address + '\'' +
                 ", clientName='" + clientName + '\'' +
                 ", port=" + port +
-                ", message=" + message +
                 ", healthyTimes=" + healthyTimes +
                 ", clientStatus=" + clientStatus +
                 '}';
-    }
-
-    public ForwardClient(){
-        this.message = new Vector<>();
-        this.observers = new ArrayList<>();
     }
 
     /**
@@ -47,11 +65,11 @@ public class ForwardClient {
     }
 
     /**
-     * 添加客户端
+     * 获取客户端连接对象
      * @param ctx 客户端连接对象
      */
-    public void setChannelHandlerContext(ChannelHandlerContext ctx){
-        this.ctx = ctx;
+    public ChannelHandlerContext getChannelHandlerContext(){
+        return this.ctx;
     }
     /**
      * 添加该对象的观察者
@@ -71,7 +89,16 @@ public class ForwardClient {
         }
     }
 
+    /**
+     * 心跳更新超过七秒 则认为无效
+     * @return boolean
+     */
     public Boolean getClientStatus() {
+        if(this.clientStatus){
+            if((System.currentTimeMillis()-healthyTimes) > 7*1000){
+                return false;
+            }
+        }
         return clientStatus;
     }
 
@@ -79,11 +106,11 @@ public class ForwardClient {
         this.clientStatus = clientStatus;
     }
 
-    public Integer getHealthyTimes() {
+    public Long getHealthyTimes() {
         return healthyTimes;
     }
 
-    public void setHealthyTimes(Integer healthyTimes) {
+    public void setHealthyTimes(Long healthyTimes) {
         this.healthyTimes = healthyTimes;
     }
 
@@ -91,23 +118,11 @@ public class ForwardClient {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getClientName() {
         return clientName;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
     public Integer getPort() {
         return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
     }
 }

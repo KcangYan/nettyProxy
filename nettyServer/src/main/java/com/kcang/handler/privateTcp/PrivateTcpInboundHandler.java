@@ -19,7 +19,7 @@ public class PrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
     }
     /**
      * 获得消息时触发的方法
-     * 当模式为多客户端时，收到的第一条消息
+     * 当模式为多客户端时，收到的心跳信息 为 clientName\003kcang 转发信息为 clientName\003httpMessage
      * @param ctx 可使用的客户端连接对象
      * @param msg 获得的消息，前置解码器解码后的消息
      * @throws Exception
@@ -30,37 +30,34 @@ public class PrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
         InetSocketAddress ipSocket = (InetSocketAddress)ctx.channel().remoteAddress();
         String clientIp = ipSocket.getAddress().getHostAddress();
         int clientPort = ipSocket.getPort();
-        myLogger.info("客户端地址和端口: "+clientIp+":"+clientPort);
+        receivedMsgHandler(received,clientIp,clientPort);
         super.channelRead(ctx, msg);
     }
 
     /**
-     * 通道建立成功的首次调用的方法
-     * @param ctx 已连接成功的客户端对象 可以读写数据
-     * @throws Exception
+     * 消息处理
+     * @param received 消息
+     * @param ip
+     * @param port
      */
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        super.channelActive(ctx);
+    private void receivedMsgHandler(String received, String ip, int port){
+        if(received.equals("DecodeError")){
+            upholdForwardClientsService.shutdownForwardClient(ip,port);
+        }else {
+            try{
+                String[] receiveds = received.split("\003");
+                String clientName = receiveds[0];
+                String msg = receiveds[1];
+                if(msg.equals("kcang")){
+                    //心跳
+                    upholdForwardClientsService.updateHealthy(ip,port);
+                }else {
+
+                }
+            }catch (Exception e){
+                myLogger.error(e.toString());
+            }
+        }
     }
 
-    /**
-     * 客户端注册通道时触发的方法
-     * @param ctx 客户端连接通道封装，该方法触发是 ctx未连接就绪无法读写
-     * @throws Exception
-     */
-    @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelRegistered(ctx);
-    }
-
-    /**
-     * 客户端连接结束是触发
-     * @param ctx
-     * @throws Exception
-     */
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelUnregistered(ctx);
-    }
 }
