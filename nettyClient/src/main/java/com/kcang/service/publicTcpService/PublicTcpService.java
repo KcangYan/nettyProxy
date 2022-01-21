@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PublicTcpService extends NettyClientTemplate implements Runnable {
 
-    public PublicTcpService(NettyClientProperties nettyClientProperties){
+    public PublicTcpService(){
         super.myLogger = LoggerFactory.getLogger(this.getClass());
-        super.serverAddress = nettyClientProperties.getPublicAddress();
-        super.port = nettyClientProperties.getPublicPort();
+        super.serverAddress = NettyClientProperties.getPublicAddress();
+        super.port = NettyClientProperties.getPublicPort();
     }
 
     /**

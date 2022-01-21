@@ -14,6 +14,7 @@ public class NettyClientProperties {
     private static String ClientName;
     private static String AesKey;
     private static Logger myLogger = LoggerFactory.getLogger(NettyClientProperties.class);
+    public static void init(){}
     static {
         try{
             myLogger.info("正在加载nettyClient.properties配置文件");
@@ -39,14 +40,6 @@ public class NettyClientProperties {
         }
     }
 
-    public String getClientName() {
-        return ClientName;
-    }
-
-    public void setClientName(String clientName) {
-        ClientName = clientName;
-    }
-
     private static String aesKeyCompletion(String aesKey){
         String template = "kcang12346890123";
         if(aesKey.length()>16){
@@ -58,43 +51,51 @@ public class NettyClientProperties {
         }
     }
 
-    public String getPublicAddress() {
+    public static String getPublicAddress() {
         return PublicAddress;
     }
 
-    public void setPublicAddress(String publicAddress) {
+    public static void setPublicAddress(String publicAddress) {
         PublicAddress = publicAddress;
     }
 
-    public int getPublicPort() {
+    public static int getPublicPort() {
         return PublicPort;
     }
 
-    public void setPublicPort(int publicPort) {
+    public static void setPublicPort(int publicPort) {
         PublicPort = publicPort;
     }
 
-    public String getPrivateAddress() {
+    public static String getPrivateAddress() {
         return PrivateAddress;
     }
 
-    public void setPrivateAddress(String privateAddress) {
+    public static void setPrivateAddress(String privateAddress) {
         PrivateAddress = privateAddress;
     }
 
-    public int getPrivatePort() {
+    public static int getPrivatePort() {
         return PrivatePort;
     }
 
-    public void setLocalPort(int privatePort) {
+    public static void setPrivatePort(int privatePort) {
         PrivatePort = privatePort;
     }
 
-    public String getAesKey() {
+    public static String getClientName() {
+        return ClientName;
+    }
+
+    public static void setClientName(String clientName) {
+        ClientName = clientName;
+    }
+
+    public static String getAesKey() {
         return AesKey;
     }
 
-    public void setAesKey(String aesKey) {
+    public static void setAesKey(String aesKey) {
         AesKey = aesKey;
     }
 }
