@@ -13,11 +13,6 @@ import java.util.List;
  */
 public class PrivateTcpDecode extends DecodeTemplate {
 
-    private NettyServerProperties nettyServerProperties;
-    public PrivateTcpDecode(NettyServerProperties nettyServerProperties){
-        this.nettyServerProperties = nettyServerProperties;
-    }
-
     /**
      * 若开启aes加密认证，则消息会通过aes解密，解密失败则会告诉handler AesDecodeError 让他踢出客户端
      * 内置消息格式为 \001 开头 ----- \002 结尾
@@ -53,8 +48,8 @@ public class PrivateTcpDecode extends DecodeTemplate {
 
     private String outMessage(String msg) throws Exception {
         try{
-            if(nettyServerProperties.isAesOpen()){
-                return super.decryptAES(msg,nettyServerProperties.getAesKey());
+            if(NettyServerProperties.isAesOpen()){
+                return super.decryptAES(msg,NettyServerProperties.getAesKey());
             }else {
                 return msg;
             }

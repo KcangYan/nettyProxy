@@ -1,22 +1,16 @@
 package com.kcang.handler.privateTcp;
 
-import com.kcang.service.privateTcpService.UpholdForwardClientsService;
+import com.kcang.pojo.ForwardClient;
+import com.kcang.service.data.DataForwardService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-
-public class PrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
+public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
 
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
-    //客户端维护服务
-    private UpholdForwardClientsService upholdForwardClientsService;
-    public PrivateTcpInboundHandler(UpholdForwardClientsService u){
-        this.upholdForwardClientsService = u;
-    }
     /**
      * 获得消息时触发的方法
      * 当模式为多客户端时，收到的心跳信息 为 clientName\003kcang 转发信息为 clientName\003httpMessage
@@ -27,22 +21,17 @@ public class PrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String received = (String) msg;
-        InetSocketAddress ipSocket = (InetSocketAddress)ctx.channel().remoteAddress();
-        String clientIp = ipSocket.getAddress().getHostAddress();
-        int clientPort = ipSocket.getPort();
-        receivedMsgHandler(received,clientIp,clientPort);
+        receivedMsgHandler(received,ctx);
         super.channelRead(ctx, msg);
     }
 
     /**
      * 消息处理
      * @param received 消息
-     * @param ip
-     * @param port
      */
-    private void receivedMsgHandler(String received, String ip, int port){
+    private void receivedMsgHandler(String received, ChannelHandlerContext ctx){
         if(received.equals("DecodeError")){
-            upholdForwardClientsService.shutdownForwardClient(ip,port);
+            DataForwardService.uForward.shutdownClient(ctx);
         }else {
             try{
                 String[] receiveds = received.split("\003");
@@ -50,9 +39,13 @@ public class PrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
                 String msg = receiveds[1];
                 if(msg.equals("kcang")){
                     //心跳
-                    upholdForwardClientsService.updateHealthy(ip,port);
+                    if(DataForwardService.uForward.clientContains(clientName)){
+                        DataForwardService.uForward.updateHealthy(ctx);
+                    }else {
+                        DataForwardService.uForward.addClient(new ForwardClient(clientName,ctx));
+                    }
                 }else {
-
+                    //收到客户端转发的response
                 }
             }catch (Exception e){
                 myLogger.error(e.toString());

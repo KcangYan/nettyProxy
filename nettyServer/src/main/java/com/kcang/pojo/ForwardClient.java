@@ -1,8 +1,8 @@
 package com.kcang.pojo;
 
-import com.kcang.template.Observer;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -17,18 +17,16 @@ public class ForwardClient {
     private Long healthyTimes = null;
     //客户端是否在线
     private Boolean clientStatus = null;
-    //注册回调者列表
-    private List<Observer> observers;
     //连接通道
     private ChannelHandlerContext ctx;
 
-    public ForwardClient(String clientName,String address, int port, ChannelHandlerContext ctx){
+    public ForwardClient(String clientName,ChannelHandlerContext ctx){
         this.clientName = clientName;
-        this.address = address;
-        this.port = port;
+        InetSocketAddress ipSocket = (InetSocketAddress)ctx.channel().remoteAddress();
+        this.address = ipSocket.getAddress().getHostAddress();
+        this.port = ipSocket.getPort();
         this.ctx = ctx;
         this.message = new Vector<>();
-        this.observers = new ArrayList<>();
     }
 
     /**
@@ -70,23 +68,6 @@ public class ForwardClient {
      */
     public ChannelHandlerContext getChannelHandlerContext(){
         return this.ctx;
-    }
-    /**
-     * 添加该对象的观察者
-     * @param observer 观察者对象
-     * @return this
-     */
-    public ForwardClient addObservers(Observer observer){
-        this.observers.add(observer);
-        return this;
-    }
-    /**
-     * 通知所有的观察者，本对象有变化
-     */
-    private void notifyObservers(){
-        for(Observer observer : this.observers){
-            observer.collBack(this);
-        }
     }
 
     /**

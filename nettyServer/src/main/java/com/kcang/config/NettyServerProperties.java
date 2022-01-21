@@ -13,7 +13,7 @@ public class NettyServerProperties {
     private static boolean AesOpen;
     private static String AesKey;
     private static Logger myLogger = LoggerFactory.getLogger(NettyServerProperties.class);
-
+    public static void init(){}
     static {
         try{
             myLogger.info("正在加载nettyServer.properties配置文件");
@@ -45,43 +45,43 @@ public class NettyServerProperties {
         }
     }
 
-    public int getPublicPort() {
+    public static int getPublicPort() {
         return PublicPort;
     }
 
-    public void setPublicPort(int publicPort) {
+    public static void setPublicPort(int publicPort) {
         PublicPort = publicPort;
     }
 
-    public int getPrivatePort() {
+    public static int getPrivatePort() {
         return PrivatePort;
     }
 
-    public void setPrivatePort(int privatePort) {
+    public static void setPrivatePort(int privatePort) {
         PrivatePort = privatePort;
     }
 
-    public String getAesKey() {
-        return AesKey;
-    }
-
-    public void setAesKey(String aesKey) {
-        AesKey = aesKey;
-    }
-
-    public boolean isHttpProxy() {
+    public static boolean isHttpProxy() {
         return HttpProxy;
     }
 
-    public void setHttpProxy(boolean httpProxy) {
+    public static void setHttpProxy(boolean httpProxy) {
         HttpProxy = httpProxy;
     }
 
-    public boolean isAesOpen() {
+    public static boolean isAesOpen() {
         return AesOpen;
     }
 
-    public void setAesOpen(boolean aesOpen) {
+    public static void setAesOpen(boolean aesOpen) {
         AesOpen = aesOpen;
+    }
+
+    public static String getAesKey() {
+        return AesKey;
+    }
+
+    public static void setAesKey(String aesKey) {
+        AesKey = aesKey;
     }
 }

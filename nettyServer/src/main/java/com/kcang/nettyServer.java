@@ -6,7 +6,8 @@ import com.kcang.service.NettyServerService;
 
 public class nettyServer {
     public static void main(String[] args){
-        NettyServerService nettyServerService = new NettyServerService(new NettyServerProperties());
+        NettyServerProperties.init();
+        NettyServerService nettyServerService = new NettyServerService();
         nettyServerService.run();
     }
 }

@@ -1,6 +1,8 @@
 package com.kcang.service.publicTcpService;
 
 import com.kcang.config.NettyServerProperties;
+import com.kcang.decode.PublicTcpDecode;
+import com.kcang.handler.publicTcp.GetPublicRequestInboundHandler;
 import com.kcang.template.NettyServerTemplate;
 import io.netty.channel.socket.SocketChannel;
 import org.slf4j.Logger;
@@ -12,9 +14,9 @@ import org.slf4j.LoggerFactory;
 public class PublicTcpService extends NettyServerTemplate implements Runnable {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
-    public PublicTcpService(NettyServerProperties nettyServerProperties){
+    public PublicTcpService(){
         super.myLogger = this.myLogger;
-        super.port = nettyServerProperties.getPublicPort();
+        super.port = NettyServerProperties.getPublicPort();
     }
 
     /**
@@ -24,8 +26,11 @@ public class PublicTcpService extends NettyServerTemplate implements Runnable {
      */
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        //ch.pipeline().addFirst(new ServerDecode());
-        //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
+        ch.pipeline().addLast(new PublicTcpDecode());
+        ch.pipeline().addLast(new GetPublicRequestInboundHandler());
+
+        //ch.pipeline().addFirst("t1",new TestOutboundHandler());//1
+        //ch.pipeline().addFirst("t2",new TestOutboundHandler());//2
     }
 
     /**
