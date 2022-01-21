@@ -13,7 +13,7 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
 
     /**
      * 获得消息时触发的方法
-     * 当模式为多客户端时，收到的心跳信息 为 clientName\003kcang 转发信息为 clientName\003httpMessage
+     * 当模式为多客户端时，收到的心跳信息 为 clientName\032kcang 转发信息为 clientName\032messageId\032msg
      * @param ctx 可使用的客户端连接对象
      * @param msg 获得的消息，前置解码器解码后的消息
      * @throws Exception
@@ -34,10 +34,10 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
             DataForwardService.uForward.shutdownClient(ctx);
         }else {
             try{
-                String[] receiveds = received.split("\003");
+                String[] receiveds = received.split("\032");
                 String clientName = receiveds[0];
-                String msg = receiveds[1];
-                if(msg.equals("kcang")){
+                String tag = receiveds[1];
+                if(tag.equals("kcang")){
                     //心跳
                     if(DataForwardService.uForward.clientContains(clientName)){
                         DataForwardService.uForward.updateHealthy(ctx);
@@ -46,6 +46,8 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
                     }
                 }else {
                     //收到客户端转发的response
+                    String msg = receiveds[2];
+                    DataForwardService.sendToPublicClient(tag,msg);
                 }
             }catch (Exception e){
                 myLogger.error(e.toString());

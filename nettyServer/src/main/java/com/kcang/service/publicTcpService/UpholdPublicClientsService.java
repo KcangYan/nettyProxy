@@ -78,4 +78,8 @@ public class UpholdPublicClientsService {
         int clientPort = ipSocket.getPort();
         return get(clientIp,clientPort);
     }
+
+    public String getId(ChannelHandlerContext ctx){
+        return get(ctx).getId();
+    }
 }
