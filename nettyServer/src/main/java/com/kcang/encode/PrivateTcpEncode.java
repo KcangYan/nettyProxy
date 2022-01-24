@@ -10,9 +10,9 @@ public class PrivateTcpEncode extends EncodeTemplate {
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, List out) throws Exception {
         if(NettyServerProperties.isAesOpen()){
-            out.add("\001"+super.encryptAES(msg.toString(), NettyServerProperties.getAesKey())+"\002");
+            out.add(super.encryptAES(msg.toString(), NettyServerProperties.getAesKey())+"\001");
         }else {
-            out.add("\001"+msg.toString()+"\002");
+            out.add(msg.toString()+"\001");
         }
     }
 }

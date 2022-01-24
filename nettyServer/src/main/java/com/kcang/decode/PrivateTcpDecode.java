@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.CharsetUtil;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,35 +16,22 @@ public class PrivateTcpDecode extends DecodeTemplate {
 
     /**
      * 若开启aes加密认证，则消息会通过aes解密，解密失败则会告诉handler AesDecodeError 让他踢出客户端
-     * 内置消息格式为 \001 开头 ----- \002 结尾
+     * 内置消息格式为 \001 结尾
      */
     private String messages = "";
-    private String start = "\001";
-    private String end = "\002";
+    private String end = "\001";
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         ByteBuf bufMsg = in.readBytes(in.readableBytes());
-        String getMsg = bufMsg.toString(CharsetUtil.UTF_8);
-        if(messages.equals("")){
-            //防止黏包
-            if(getMsg.contains(start) && getMsg.contains(end)){
-                out.add(outMessage(getMsg.replaceAll("\001","").replaceAll("\002","")));
-            }else if(getMsg.contains(start)){
-                messages = getMsg;
-            }else {
-                out.add("DecodeError");
-            }
-        }else {
-            //防止半包
-            getMsg = messages + getMsg;
-            if(getMsg.contains(end)){
-                out.add(outMessage(getMsg.replaceAll("\001","").replaceAll("\002","")));
-                messages = "";
-            }else {
-                messages = getMsg;
-                ctx.read();
-            }
+        String getMsg = messages + bufMsg.toString(CharsetUtil.UTF_8);
+        String[] ss;
+        while (getMsg.contains(end)){
+            //切割字符串，可以适应多条消息粘结在一起的情况
+            ss = getMsg.split(end,2);
+            out.add(outMessage(ss[0]));
+            getMsg = ss[1];
         }
+        messages = getMsg;
     }
 
     private String outMessage(String msg) throws Exception {
