@@ -55,4 +55,14 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
         }
     }
 
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        DataForwardService.uForward.delClient(ctx);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        DataForwardService.uForward.delClient(ctx);
+    }
+
 }

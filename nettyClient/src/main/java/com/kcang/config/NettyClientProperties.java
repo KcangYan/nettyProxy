@@ -13,6 +13,7 @@ public class NettyClientProperties {
     private static int PrivatePort;
     private static String ClientName;
     private static String AesKey;
+    private static Boolean AesOpen;
     private static Logger myLogger = LoggerFactory.getLogger(NettyClientProperties.class);
     public static void init(){}
     static {
@@ -27,6 +28,7 @@ public class NettyClientProperties {
             PrivateAddress = prop.getProperty("PrivateAddress");
             PrivatePort = Integer.parseInt(prop.getProperty("PrivatePort"));//加载要转发的本地http服务端口
             ClientName = prop.getProperty("ClientName");
+            AesOpen = Boolean.valueOf(prop.getProperty("AesOpen"));
             myLogger.info("nettyClient.properties配置文件加载成功");
         }catch (Exception e){
             AesKey = "kcang12346890123";
@@ -35,9 +37,18 @@ public class NettyClientProperties {
             PrivateAddress = "127.0.0.1";
             PrivatePort = 9191;
             ClientName="ClientName";
+            AesOpen = true;
             //e.printStackTrace();
             myLogger.error("配置文件加载失败: "+e.toString()+ " 启用默认配置");
         }
+    }
+
+    public static Boolean getAesOpen() {
+        return AesOpen;
+    }
+
+    public static void setAesOpen(Boolean aesOpen) {
+        AesOpen = aesOpen;
     }
 
     private static String aesKeyCompletion(String aesKey){

@@ -1,4 +1,4 @@
-package com.kcang.model;
+package com.kcang.template;
 
 import io.netty.handler.codec.MessageToMessageEncoder;
 
@@ -10,7 +10,7 @@ import java.util.Base64;
 /**
  * 用于出口消息解码处理的统一模板类
  */
-public abstract class EncodeTemplate extends MessageToMessageEncoder {
+public abstract class EncodeTemplate extends MessageToMessageEncoder<String> {
 
     //偏移量设置
     private final String IV_STRING = "com.kcang.aes.ed";

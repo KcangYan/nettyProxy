@@ -1,7 +1,6 @@
 package com.kcang.decode;
 
-import com.kcang.config.NettyServerProperties;
-import com.kcang.service.data.DataForwardService;
+import com.kcang.config.NettyClientProperties;
 import com.kcang.template.DecodeTemplate;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,17 +8,13 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * 与客户端通信的解码器，负责获取客户端的发送的信息
- */
-public class PrivateTcpDecode extends DecodeTemplate {
-    private static Logger myLogger = LoggerFactory.getLogger(PrivateTcpDecode.class);
+public class PublicTcpDecode extends DecodeTemplate {
+    private static Logger myLogger = LoggerFactory.getLogger(PublicTcpDecode.class);
+
     /**
-     * 若开启aes加密认证，则消息会通过aes解密，解密失败则会告诉handler AesDecodeError 让他踢出客户端
-     * 内置消息格式为 \001 结尾
+     * 解析服务端传过来的消息，消息格式为 id\032msg\001
      */
     private String messages = "";
     private String end = "\001";
@@ -37,11 +32,10 @@ public class PrivateTcpDecode extends DecodeTemplate {
         }
         messages = getMsg;
     }
-
     private String outMessage(String msg) throws Exception {
         try{
-            if(NettyServerProperties.isAesOpen()){
-                return super.decryptAES(msg,NettyServerProperties.getAesKey());
+            if(NettyClientProperties.getAesOpen()){
+                return super.decryptAES(msg,NettyClientProperties.getAesKey());
             }else {
                 return msg;
             }

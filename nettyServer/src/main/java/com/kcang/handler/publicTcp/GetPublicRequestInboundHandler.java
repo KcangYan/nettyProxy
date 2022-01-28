@@ -13,10 +13,13 @@ import org.slf4j.LoggerFactory;
 public class GetPublicRequestInboundHandler extends ChannelInboundHandlerAdapter {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * 将收到的公网请求转发给局域网客户端，id\032msg
+     */
     private String clientName;
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String id = DataForwardService.uPublic.getId(ctx);
+        String id = DataForwardService.uPublic.getId(ctx);//标识是哪个公网客户端转来的消息，到时候回复给对应的
         if(NettyServerProperties.isHttpProxy()){
             try {
                 if(msg.getClass().equals(DefaultHttpRequest.class)){
@@ -32,14 +35,14 @@ public class GetPublicRequestInboundHandler extends ChannelInboundHandlerAdapter
 
                     DataForwardService.sendToForwardClient(clientName, id+"\032"+bufMsg.toString(CharsetUtil.UTF_8));
                 }else {
-                    DataForwardService.sendToForwardClient(clientName, id+"\032"+msg.toString());
+                    DataForwardService.sendToForwardClient(clientName, id+"\032"+msg);
                 }
             }catch (Exception e){
                 myLogger.error("异常http请求: "+e.toString());
                 ctx.disconnect();
             }
         }else {
-            //非http多客户端模式
+            //非http多客户端模式，所以只要转发就行不需要额外处理
         }
 
     }
@@ -74,6 +77,6 @@ public class GetPublicRequestInboundHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
+        DataForwardService.uPublic.delClient(ctx);
     }
 }

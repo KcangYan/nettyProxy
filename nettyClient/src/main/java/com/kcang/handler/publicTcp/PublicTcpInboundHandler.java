@@ -1,5 +1,7 @@
 package com.kcang.handler.publicTcp;
 
+import com.kcang.config.NettyClientProperties;
+import com.kcang.service.HeartBeatService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
@@ -59,9 +61,11 @@ public class PublicTcpInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        super.channelActive(ctx);
-        myLogger.info("channelActive "+ctx.name());
-        //ctx.writeAndFlush(Unpooled.copiedBuffer("hello server", CharsetUtil.UTF_8));
-        //myLogger.info(ctx.toString());
+        //super.channelActive(ctx);
+        myLogger.info("启动心跳线程");
+        String beatMsg = NettyClientProperties.getClientName()+"\032kcang";
+        Thread beat = new Thread(new HeartBeatService(ctx,beatMsg),"HeartBeatService");
+        beat.start();
+        myLogger.info("心跳线程启动成功");
     }
 }

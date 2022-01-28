@@ -1,4 +1,4 @@
-package com.kcang.model;
+package com.kcang.template;
 
 import io.netty.handler.codec.ByteToMessageDecoder;
 
