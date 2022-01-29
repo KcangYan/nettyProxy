@@ -1,6 +1,7 @@
 package com.kcang.service.publicTcpService;
 
 import com.kcang.config.NettyClientProperties;
+import com.kcang.decode.PublicTcpDecode;
 import com.kcang.encode.PublicTcpEncode;
 import com.kcang.handler.publicTcp.PublicTcpInboundHandler;
 import com.kcang.handler.publicTcp.PublicTcpOutboundHandler;
@@ -27,6 +28,7 @@ public class PublicTcpService extends NettyClientTemplate implements Runnable {
      */
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(new PublicTcpDecode());
         ch.pipeline().addLast(new PublicTcpInboundHandler());
 
         //ch.pipeline().addLast(new Test());

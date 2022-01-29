@@ -4,6 +4,7 @@ import com.kcang.config.NettyServerProperties;
 import com.kcang.template.EncodeTemplate;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +17,9 @@ public class PrivateTcpEncode extends EncodeTemplate {
         ByteBuf buf = ctx.alloc().buffer();
         myLogger.debug("发送消息: "+msg);
         if(NettyServerProperties.isAesOpen()){
-            out.add(buf.writeBytes((super.encryptAES(msg,NettyServerProperties.getAesKey())+"\001").getBytes()));
+            out.add(buf.writeBytes((super.encryptAES(msg,NettyServerProperties.getAesKey())+"\001").getBytes(CharsetUtil.UTF_8)));
         }else {
-            out.add(buf.writeBytes((msg+"\001").getBytes()));
+            out.add(buf.writeBytes((msg+"\001").getBytes(CharsetUtil.UTF_8)));
         }
     }
 }
