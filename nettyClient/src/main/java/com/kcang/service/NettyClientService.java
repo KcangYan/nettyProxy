@@ -1,6 +1,5 @@
 package com.kcang.service;
 
-import com.kcang.config.NettyClientProperties;
 import com.kcang.service.publicTcpService.PublicTcpService;
 
 public class NettyClientService {

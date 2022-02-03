@@ -1,7 +1,6 @@
 package com.kcang.decode;
 
 import com.kcang.config.NettyServerProperties;
-import com.kcang.service.data.DataForwardService;
 import com.kcang.template.DecodeTemplate;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,7 +8,6 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -1,5 +1,6 @@
 package com.kcang.service.privateTcpService;
 
+import com.kcang.config.NettyServerProperties;
 import com.kcang.pojo.ForwardClient;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -25,8 +26,18 @@ public class UpholdForwardClientsService {
      * @param forwardClient 客户端实例
      */
     public void addClient(ForwardClient forwardClient){
-        updateHealthy(forwardClient);
-        myLogger.info("新客户端加入 "+forwardClient.toString());
+        if(NettyServerProperties.isHttpProxy()){
+            updateHealthy(forwardClient);
+            myLogger.info("新客户端加入 "+forwardClient.toString());
+        }else {
+            if(forwardClients.keySet().size() == 0){
+                updateHealthy(forwardClient);
+                myLogger.info("新客户端加入 "+forwardClient.toString());
+            }else {
+                forwardClient.getChannelHandlerContext().disconnect();
+                myLogger.error("当前已存在客户端，无法增加新客户端。请设置HttpProxy或者关闭已连接的客户端");
+            }
+        }
     }
 
     /**
@@ -145,5 +156,20 @@ public class UpholdForwardClientsService {
         String clientIp = ipSocket.getAddress().getHostAddress();
         int clientPort = ipSocket.getPort();
         return get(clientIp,clientPort);
+    }
+
+    /**
+     * 用于单客户端模式获取一个客户端的名字
+     * @return
+     */
+    public String getFirst(){
+        if(forwardClients.keySet().size() != 0){
+            for(String key : forwardClients.keySet()){
+                return key;
+            }
+            return null;
+        }else {
+            return null;
+        }
     }
 }

@@ -3,11 +3,13 @@ package com.kcang.service.data;
 import com.kcang.pojo.ForwardClient;
 import com.kcang.service.privateTcpService.UpholdForwardClientsService;
 import com.kcang.service.publicTcpService.UpholdPublicClientsService;
+import io.netty.buffer.Unpooled;
+import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DataForwardService {
-    private static Logger myLogger = LoggerFactory.getLogger(DataForwardService.class);
+public class ForwardService {
+    private static Logger myLogger = LoggerFactory.getLogger(ForwardService.class);
     /**
      * 实例化内网转发客户端队列维护服务
      */
@@ -16,13 +18,6 @@ public class DataForwardService {
      * 实例化公网转发连接端队列维护服务
      */
     public static UpholdPublicClientsService uPublic;
-
-    static {
-        uForward = new UpholdForwardClientsService();
-        uPublic  = new UpholdPublicClientsService();
-    }
-
-    public static void init(){}
 
     public static void sendToForwardClient(ForwardClient forwardClient,Object msg){
         forwardClient.getChannelHandlerContext().writeAndFlush(msg);
@@ -37,7 +32,15 @@ public class DataForwardService {
         }
     }
 
-    public static void sendToPublicClient(String id, Object msg){
-        uPublic.get(id).getCtx().writeAndFlush(msg);
+    /**
+     * 仅限单客户端模式使用
+     * @param msg
+     */
+    public static void sendToForwardClient(Object msg){
+        sendToForwardClient(ForwardService.uForward.getFirst(),msg);
+    }
+
+    public static void sendToPublicClient(String id, String msg){
+        uPublic.get(id).getCtx().writeAndFlush(Unpooled.copiedBuffer(msg.getBytes(CharsetUtil.UTF_8)));
     }
 }

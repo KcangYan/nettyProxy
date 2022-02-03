@@ -4,8 +4,6 @@ import com.kcang.config.NettyClientProperties;
 import com.kcang.decode.PublicTcpDecode;
 import com.kcang.encode.PublicTcpEncode;
 import com.kcang.handler.publicTcp.PublicTcpInboundHandler;
-import com.kcang.handler.publicTcp.PublicTcpOutboundHandler;
-import com.kcang.handler.publicTcp.Test;
 import com.kcang.template.NettyClientTemplate;
 import io.netty.channel.socket.SocketChannel;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,6 @@ public class PublicTcpService extends NettyClientTemplate implements Runnable {
         ch.pipeline().addLast(new PublicTcpDecode());
         ch.pipeline().addLast(new PublicTcpInboundHandler());
 
-        //ch.pipeline().addLast(new Test());
         ch.pipeline().addFirst(new PublicTcpEncode());
     }
 

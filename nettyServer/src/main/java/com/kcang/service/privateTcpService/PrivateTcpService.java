@@ -3,7 +3,7 @@ package com.kcang.service.privateTcpService;
 import com.kcang.config.NettyServerProperties;
 import com.kcang.decode.PrivateTcpDecode;
 import com.kcang.encode.PrivateTcpEncode;
-import com.kcang.handler.privateTcp.MultipleClientPrivateTcpInboundHandler;
+import com.kcang.handler.privateTcp.MultipleClientPrivateInboundHandler;
 import com.kcang.template.NettyServerTemplate;
 import io.netty.channel.socket.SocketChannel;
 import org.slf4j.Logger;
@@ -28,8 +28,7 @@ public class PrivateTcpService extends NettyServerTemplate implements Runnable {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(new PrivateTcpDecode());
-        ch.pipeline().addLast(new MultipleClientPrivateTcpInboundHandler());
-        //ch.pipeline().addFirst(new HeartBeatHandler());
+        ch.pipeline().addLast(new MultipleClientPrivateInboundHandler());
         //ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.INFO));
 
         ch.pipeline().addFirst(new PrivateTcpEncode());

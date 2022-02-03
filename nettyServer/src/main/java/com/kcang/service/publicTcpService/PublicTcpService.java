@@ -2,7 +2,7 @@ package com.kcang.service.publicTcpService;
 
 import com.kcang.config.NettyServerProperties;
 import com.kcang.decode.PublicTcpDecode;
-import com.kcang.handler.publicTcp.GetPublicRequestInboundHandler;
+import com.kcang.handler.publicTcp.MultipleClientPublicInboundHandler;
 import com.kcang.template.NettyServerTemplate;
 import io.netty.channel.socket.SocketChannel;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class PublicTcpService extends NettyServerTemplate implements Runnable {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(new PublicTcpDecode());
-        ch.pipeline().addLast(new GetPublicRequestInboundHandler());
+        ch.pipeline().addLast(new MultipleClientPublicInboundHandler());
 
         //ch.pipeline().addFirst("t1",new TestOutboundHandler());//1
         //ch.pipeline().addFirst("t2",new TestOutboundHandler());//2

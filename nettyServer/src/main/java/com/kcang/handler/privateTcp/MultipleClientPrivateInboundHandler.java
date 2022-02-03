@@ -1,13 +1,13 @@
 package com.kcang.handler.privateTcp;
 
 import com.kcang.pojo.ForwardClient;
-import com.kcang.service.data.DataForwardService;
+import com.kcang.service.data.ForwardService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
+public class MultipleClientPrivateInboundHandler extends ChannelInboundHandlerAdapter {
 
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
@@ -31,7 +31,7 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
      */
     private void receivedMsgHandler(String received, ChannelHandlerContext ctx){
         if(received.equals("DecodeError")){
-            DataForwardService.uForward.shutdownClient(ctx);
+            ForwardService.uForward.shutdownClient(ctx);
         }else {
             try{
                 String[] receiveds = received.split("\032");
@@ -39,17 +39,20 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
                 String tag = receiveds[1];
                 if(tag.equals("kcang")){
                     //心跳
-                    if(DataForwardService.uForward.clientContains(clientName)){
-                        DataForwardService.uForward.updateHealthy(ctx);
+                    if(ForwardService.uForward.clientContains(clientName)){
+                        ForwardService.uForward.updateHealthy(ctx);
                     }else {
-                        DataForwardService.uForward.addClient(new ForwardClient(clientName,ctx));
+                        ForwardService.uForward.addClient(new ForwardClient(clientName,ctx));
                     }
                 }else {
                     //收到客户端转发的response
                     String msg = receiveds[2];
-                    DataForwardService.sendToPublicClient(tag,msg);
+                    ForwardService.sendToPublicClient(tag,msg);
+                    myLogger.debug("获取待转发消息id： "+tag);
+                    myLogger.debug("获取待转发消息： \n"+msg);
                 }
             }catch (Exception e){
+                //e.printStackTrace();
                 myLogger.error(e.toString());
             }
         }
@@ -57,12 +60,12 @@ public class MultipleClientPrivateTcpInboundHandler extends ChannelInboundHandle
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        DataForwardService.uForward.delClient(ctx);
+        ForwardService.uForward.delClient(ctx);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        DataForwardService.uForward.delClient(ctx);
+        ForwardService.uForward.delClient(ctx);
     }
 
 }

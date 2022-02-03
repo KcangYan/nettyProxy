@@ -1,5 +1,6 @@
 package com.kcang.handler.privateTcp;
 
+import com.kcang.config.NettyClientProperties;
 import com.kcang.service.data.DataForwardService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -19,7 +20,11 @@ public class PrivateTcpInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        publicCtx.writeAndFlush(id+"\032"+(String) msg);
+        if(msg != null){
+            publicCtx.writeAndFlush(NettyClientProperties.getClientName()+"\032"+id+"\032"+(String) msg);
+        }else {
+            myLogger.error("客户端收到内网转发端的空消息 "+ctx.toString());
+        }
     }
 
     @Override

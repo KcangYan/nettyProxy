@@ -1,6 +1,7 @@
 package com.kcang.service.privateTcpService;
 
 import com.kcang.config.NettyClientProperties;
+import com.kcang.decode.PrivateTcpDecode;
 import com.kcang.handler.privateTcp.PrivateTcpInboundHandler;
 import com.kcang.template.NettyClientTemplate;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,6 +31,7 @@ public class PrivateTcpService extends NettyClientTemplate implements Runnable{
      */
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(new PrivateTcpDecode());
         ch.pipeline().addLast(new PrivateTcpInboundHandler(this.id,this.ctx));
     }
 

@@ -25,6 +25,8 @@ public class PublicTcpInboundHandler extends ChannelInboundHandlerAdapter {
         }else {
             String[] msgs = getMsg.split("\032");
             DataForwardService.sendMsg(msgs[0],msgs[1],ctx);
+            myLogger.debug("获取待转发消息id： "+msgs[0]);
+            myLogger.debug("获取待转发消息： "+msgs[1]);
         }
     }
 
