@@ -60,13 +60,7 @@ public class UpholdForwardClientsService {
         myLogger.debug("心跳维护成功 "+forwardClient.toString());
     }
     public void updateHealthy(String address, int port){
-        ForwardClient forwardClient = null;
-        for(String key:this.forwardClients.keySet()){
-            forwardClient = this.forwardClients.get(key);
-            if(forwardClient.forwardClientEquals(address,port)){
-                break;
-            }
-        }
+        ForwardClient forwardClient = get(address,port);
         if(forwardClient != null){
             updateHealthy(forwardClient);
         }
@@ -75,7 +69,13 @@ public class UpholdForwardClientsService {
         InetSocketAddress ipSocket = (InetSocketAddress)ctx.channel().remoteAddress();
         String clientIp = ipSocket.getAddress().getHostAddress();
         int clientPort = ipSocket.getPort();
-        updateHealthy(clientIp,clientPort);
+        ForwardClient forwardClient = get(clientIp,clientPort);
+        if(forwardClient == null){
+            ctx.disconnect();
+            myLogger.error("无效心跳请求，未注册客户端或者客户端已移除");
+        }else {
+            updateHealthy(forwardClient);
+        }
     }
     /**
      * 关闭客户端
@@ -88,13 +88,7 @@ public class UpholdForwardClientsService {
         myLogger.info("关闭客户端实例: "+forwardClient.toString());
     }
     public void shutdownClient(String address, int port){
-        ForwardClient forwardClient = null;
-        for(String key:this.forwardClients.keySet()){
-            forwardClient = this.forwardClients.get(key);
-            if(forwardClient.forwardClientEquals(address,port)){
-                break;
-            }
-        }
+        ForwardClient forwardClient = get(address,port);
         if(forwardClient != null){
             shutdownClient(forwardClient);
         }
@@ -115,13 +109,7 @@ public class UpholdForwardClientsService {
         myLogger.info("客户端移除: "+forwardClient.toString());
     }
     public void delClient(String address, int port){
-        ForwardClient forwardClient = null;
-        for(String key:this.forwardClients.keySet()){
-            forwardClient = this.forwardClients.get(key);
-            if(forwardClient.forwardClientEquals(address,port)){
-                break;
-            }
-        }
+        ForwardClient forwardClient = get(address,port);
         if(forwardClient != null){
             delClient(forwardClient);
         }
@@ -148,6 +136,9 @@ public class UpholdForwardClientsService {
                 name = key;
                 break;
             }
+        }
+        if(name == null){
+            return null;
         }
         return get(name);
     }
