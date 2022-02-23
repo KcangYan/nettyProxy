@@ -10,6 +10,8 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAdapter {
     private Logger myLogger = LoggerFactory.getLogger(this.getClass());
 
@@ -64,15 +66,18 @@ public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAda
         return header;
     }
     private String getHeadersStr(HttpRequest header){
+        System.out.println(header.toString());
         String[] hs = header.toString().split("\r\n");
-        String headerStr = "";
+        System.out.println(Arrays.toString(hs));
+        StringBuilder headerStr = new StringBuilder();
         for(int i=1;i<hs.length;i++){
             if(i == hs.length-1){
-                headerStr = headerStr + hs[i];
+                headerStr.append(hs[i]);
             }else {
-                headerStr = headerStr + hs[i] + "\r\n";
+                headerStr.append(hs[i]).append("\r\n");
             }
         }
+        myLogger.error(headerStr.toString());
         return headerStr+"\r\n\r\n";
     }
 
