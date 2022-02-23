@@ -57,7 +57,7 @@ public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAda
     }
     private HttpRequest getClientName(HttpRequest header){
         clientName = header.uri().split("/")[1];
-        header.setUri(header.uri().replaceAll("/"+clientName,""));
+        header.setUri(header.uri().substring(clientName.length()+1));
         if(header.uri().equals("")){
             header.setUri("/");
         }
