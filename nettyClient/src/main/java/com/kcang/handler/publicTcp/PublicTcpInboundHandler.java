@@ -24,10 +24,15 @@ public class PublicTcpInboundHandler extends ChannelInboundHandlerAdapter {
             myLogger.error("异常解码消息");
         }else {
             String[] msgs = getMsg.split("\032");
-            myLogger.error(getMsg);
-            DataForwardService.sendMsg(msgs[0],msgs[1],ctx);
-            myLogger.debug("获取待转发消息id： "+msgs[0]);
-            myLogger.debug("获取待转发消息： "+msgs[1]);
+            String id = msgs[0];
+            try{
+                String sendMsg = msgs[1];
+                DataForwardService.sendMsg(id,sendMsg,ctx);
+                myLogger.debug("获取待转发消息id： "+id);
+                myLogger.debug("获取待转发消息： "+sendMsg);
+            }catch (ArrayIndexOutOfBoundsException e){
+                myLogger.error("收到空消息，请注意，消息ID="+id);
+            }
         }
     }
 
