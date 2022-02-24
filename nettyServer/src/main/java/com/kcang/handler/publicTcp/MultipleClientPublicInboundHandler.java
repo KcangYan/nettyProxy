@@ -34,7 +34,7 @@ public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAda
                     //System.out.println(header.toString());
                     //String headerM = getHeadersStr(header);
                     String headerM = header.toString();
-                    myLogger.info(headerM);
+                    //myLogger.info(headerM);
                     ForwardService.sendToForwardClient(clientName, id+"\032"+headerM);
                 }else if(msg instanceof HttpContent){
                     HttpContent content = (HttpContent) msg;

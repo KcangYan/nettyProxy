@@ -50,12 +50,12 @@ public class DataForwardService {
     }
     public static void addClient(String id, ChannelHandlerContext ctx){
         privateClients.put(id,ctx);
-        myLogger.info("增加转发任务: "+id);
+        myLogger.info("增加转发任务线程: "+id);
         messageHandler(id);
     }
     public static void delClient(String id){
         privateClients.remove(id);
-        myLogger.info("移除转发任务: "+id);
+        myLogger.info("移除转发任务线程: "+id);
     }
 
     public static void addMessage(String id, String msg){
