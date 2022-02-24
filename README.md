@@ -16,9 +16,10 @@
           设置为false，关闭多客户端注册时，一个nettyServer只对应一个nettyClient，请求nettyServer时就无需增加接口前缀，
           直接发起/api/get即可。同时当已经有nettyClient与nettyServer接通时，其他client无法接入server。
   
-  **AesOpen** 默认true，表示开启server与client的通信加密，报文会以aes加密来通信。注意：此设置必须与client端一致，否
-    则server端开启加密client未开启，则client端会因为无法解密报文而转发失败。同理server端未开启client端开启，则服务
-    端会因为无法解密报文而转发失败。
+  **AesOpen** 默认true，表示开启server与client的通信加密，报文会以aes加密来通信。
+       
+          注意：此设置必须与client端一致，否则server端开启加密client未开启，则client端会因为无法解密报文而转发失败。同
+          理server端未开启client端开启，则服务端会因为无法解密报文而转发失败。
       
   **AesKey** 当且仅当AesOpen=true时生效，为aes加密密钥，必须server和client端一致，否则报文解密失败。
       
