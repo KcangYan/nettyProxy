@@ -1,9 +1,10 @@
 package com.kcang.decode;
 
 import com.kcang.config.NettyServerProperties;
+import com.kcang.template.MyHttpRequest;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,5 +24,12 @@ public class PublicTcpDecode extends HttpRequestDecoder {
             String getMsg = bufMsg.toString(CharsetUtil.UTF_8);
             out.add(getMsg);
         }
+    }
+
+    @Override
+    protected HttpMessage createMessage(String[] initialLine) throws Exception {
+        return new MyHttpRequest(
+                HttpVersion.valueOf(initialLine[2]),
+                HttpMethod.valueOf(initialLine[0]), initialLine[1], validateHeaders);
     }
 }

@@ -32,8 +32,9 @@ public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAda
                     HttpRequest header = (HttpRequest) msg;
                     header = getClientName(header);
                     //System.out.println(header.toString());
-                    String headerM = getHeadersStr(header);
-                    //myLogger.info(headerM);
+                    //String headerM = getHeadersStr(header);
+                    String headerM = header.toString();
+                    myLogger.info(headerM);
                     ForwardService.sendToForwardClient(clientName, id+"\032"+headerM);
                 }else if(msg instanceof HttpContent){
                     HttpContent content = (HttpContent) msg;
@@ -66,9 +67,8 @@ public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAda
         return header;
     }
     private String getHeadersStr(HttpRequest header){
-        System.out.println(header.toString());
-        String[] hs = header.toString().split("\r\n");
-        System.out.println(Arrays.toString(hs));
+        String headerToString = header.toString();
+        String[] hs = headerToString.split("\r\n");
         StringBuilder headerStr = new StringBuilder();
         for(int i=1;i<hs.length;i++){
             if(i == hs.length-1){
@@ -77,7 +77,6 @@ public class MultipleClientPublicInboundHandler extends ChannelInboundHandlerAda
                 headerStr.append(hs[i]).append("\r\n");
             }
         }
-        myLogger.error(headerStr.toString());
         return headerStr+"\r\n\r\n";
     }
 
